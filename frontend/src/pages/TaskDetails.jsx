@@ -120,9 +120,12 @@ export default function TaskDetails() {
                 assigneeId: parseInt(editedTask.assigneeId),
                 reviewerId: parseInt(editedTask.reviewerId),
             });
-            toast.success("Task updated successfully");
-            setIsEditing(false);
-            fetchData();
+            const isAuthorized = (userRole, taskId) => {
+              if (userRole === 'MANAGER') return true;
+              if (userRole === 'ASSIGNEE' && user.userId === task.assigneeId) return true;
+              if (userRole === 'REVIEWER' && user.userId === task.reviewerId) return true;
+              return false;
+            };
         } catch (error) {
             toast.error("Failed to update task info");
         }
